@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\AdopterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShelterController;
+use App\Http\Controllers\PublicController;
 
 // Rotas Públicas
 Route::get('/', function () {
@@ -28,3 +30,6 @@ Auth::routes();
 
 // Redirecionamento após login
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/', [PublicController::class, 'index'])->name('public.index');
+

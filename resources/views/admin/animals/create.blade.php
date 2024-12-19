@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Cadastrar Animal</h1>
+    <h1>Cadastrar Animal - teste jenkins</h1>
     <form action="{{ route('animals.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">

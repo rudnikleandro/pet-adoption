@@ -70,28 +70,6 @@
             </div>
 
         <div class="col-md-3">
-            <label for="color" class="form-label">Cor</label>
-            <select id="color" name="color" class="form-select">
-                <option value="" selected>Todas</option>
-                <option value="preto">Preto</option>
-                <option value="branco">Branco</option>
-                <option value="marrom">Marrom</option>
-                <option value="cinza">Cinza</option>
-                <option value="amarelo">Amarelo</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label for="coat" class="form-label">Pelagem</label>
-            <select id="coat" name="coat" class="form-select">
-                <option value="" selected>Todas</option>
-                <option value="curta">Curta</option>
-                <option value="media">Média</option>
-                <option value="longa">Longa</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
             <label for="age" class="form-label">Idade</label>
             <select id="age" name="age" class="form-select">
                 <option value="" selected>Todas</option>
@@ -103,7 +81,7 @@
 
         <div class="col-md-3">
             <label for="sex" class="form-label">Sexo</label>
-            <select id="sex" name="sex" class="form-select">
+            <select id="gender" name="sex" class="form-select">
                 <option value="" selected>Ambos</option>
                 <option value="macho">Macho</option>
                 <option value="femea">Fêmea</option>
@@ -111,29 +89,23 @@
         </div>
 
         <div class="col-md-3">
-            <label for="castrated" class="form-label">Castrado</label>
-            <select id="castrated" name="castrated" class="form-select">
-                <option value="" selected>Todos</option>
-                <option value="sim">Sim</option>
-                <option value="nao">Não</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
             <label for="shelter" class="form-label">Abrigo</label>
             <select id="shelter" name="shelter" class="form-select">
                 <option value="" selected>Todos</option>
-
+                @foreach ($shelters as $shelter)
+                    <option value="{{ $shelter->id }}" {{ request('shelter') == $shelter->id ? 'selected' : '' }}>
+                        {{ $shelter->name }}
+                    </option>
+                @endforeach
             </select>
         </div>
-
+        
         <div class="col-md-3 text-end">
             <label class="form-label d-block">&nbsp;</label>
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
     </form>
 </section>
-
 
     <!-- Main Content -->
     <div class="container mt-4">

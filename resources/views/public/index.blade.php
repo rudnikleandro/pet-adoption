@@ -57,17 +57,17 @@
 
     <!-- Filter -->
     <!-- Filtro de Animais -->
-<section class="container mt-4">
-    <form method="GET" action="" class="row g-3 align-items-center">
-        <div class="col-md-3">
-            <label for="size" class="form-label">Tamanho</label>
-            <select id="size" name="size" class="form-select">
-                <option value="" selected>Todos</option>
-                <option value="pequeno">Pequeno</option>
-                <option value="medio">Médio</option>
-                <option value="grande">Grande</option>
-            </select>
-        </div>
+    <section class="container mt-4">
+        <form id="filterForm" class="row g-3 align-items-center">
+            <div class="col-md-3">
+                <label for="size" class="form-label">Tamanho</label>
+                <select id="size" name="size" class="form-select">
+                    <option value="" selected>Todos</option>
+                    <option value="small">Pequeno</option>
+                    <option value="medium">Médio</option>
+                    <option value="large">Grande</option>
+                </select>
+            </div>
 
         <div class="col-md-3">
             <label for="color" class="form-label">Cor</label>
@@ -196,5 +196,60 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('filterForm');
+        const resultsContainer = document.querySelector('.row'); 
+        const filterUrl = '/animais';
+    
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); 
+    
+           
+            const formData = new FormData(form);
+            const queryParams = new URLSearchParams(formData).toString(); 
+    
+            console.log(`URL enviada: ${filterUrl}?${queryParams}`);
+    
+            fetch(`${filterUrl}?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    resultsContainer.innerHTML = '';
+    
+                    if (data.animals.length > 0) {
+                        data.animals.forEach(animal => {
+                            const card = `
+                                <div class="col-md-3 mb-3">
+                                    <div class="card">
+                                        ${animal.photos.length > 0 ? `
+                                            <img src="/storage/${animal.photos[0].photo_path}" class="card-img-top" alt="${animal.name}">
+                                        ` : `
+                                            <img src="/images/default_animal.jpg" class="card-img-top" alt="Animal sem foto">
+                                        `}
+                                        <div class="card-body">
+                                            <h5 class="card-title">${animal.name}</h5>
+                                            <p><strong>Raça:</strong> ${animal.breed}</p>
+                                            <p><strong>Idade:</strong> ${animal.age} anos</p>
+                                            <a href="/animals/${animal.id}" class="btn btn-primary btn-sm">Saiba Mais</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            resultsContainer.insertAdjacentHTML('beforeend', card);
+                        });
+                    } else {
+                        resultsContainer.innerHTML = '<p class="text-center">Nenhum animal encontrado.</p>';
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+        });
+    });
+    
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +11,33 @@
             height: 200px;
             object-fit: cover;
         }
+
         footer {
             background-color: #f8f9fa;
             padding: 20px 0;
             text-align: center;
         }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card img {
+            object-fit: cover;
+            height: 200px;
+        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js" async></script>
 </head>
+
 <body>
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,18 +64,15 @@
 
     <!-- Hero Section -->
     <div class="px-4 py-5 my-5 text-center">
-        <img src="{{ asset('storage/images/paw.png') }}" alt="Logo" width="100" height="100">
         <h1 class="display-5 fw-bold text-body-emphasis">Adote um Pet</h1>
         <div class="col-lg-6 mx-auto">
-          <p class="lead mb-4">Adotar um pet é um ato de amor que transforma vidas. Além de oferecer um lar para animais que muitas vezes foram abandonados ou maltratados, você ganha um companheiro fiel e cheio de carinho.</p>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Fale Conosco</button>
-            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Quem Somos</button>
-          </div>
+            <p class="lead mb-4">Adotar um pet é um ato de amor que transforma vidas. Além de oferecer um lar para
+                animais que muitas vezes foram abandonados ou maltratados, você ganha um companheiro fiel e cheio de
+                carinho.</p>
         </div>
-      </div>
+    </div>
 
-    <!-- Filter -->
+        <!-- Filter -->
     <!-- Filtro de Animais -->
     <section class="container mt-4">
         <form id="filterForm" class="row g-3 align-items-center">
@@ -115,42 +132,33 @@
                 <div class="col-md-3 mb-3">
                     <div class="card">
                         @if ($animal->photos->count() > 0)
-                            <div id="carousel-{{ $animal->id }}" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    @foreach ($animal->photos as $key => $photo)
-                                        <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
-                                            <img 
-                                                data-src="{{ asset('storage/' . $photo->photo_path) }}" 
-                                                class="d-block w-100 lazyload" 
-                                                alt="{{ $animal->name }}"
-                                            >
-                                        </div>
-                                    @endforeach
-                                </div>
-                                @if ($animal->photos->count() > 1)
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $animal->id }}" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Anterior</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $animal->id }}" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Próximo</span>
-                                    </button>
-                                @endif
-                            </div>
+                            <img src="{{ asset('storage/' . $animal->photos->first()->photo_path) }}"
+                                class="card-img-top" alt="{{ $animal->name }}">
                         @else
-                            <img 
-                                data-src="{{ asset('images/default_animal.jpg') }}" 
-                                class="card-img-top lazyload" 
-                                alt="{{ $animal->name }}"
-                            >
+                            <img src="{{ asset('images/default_animal.jpg') }}" class="card-img-top"
+                                alt="{{ $animal->name }}">
                         @endif
                         <div class="card-body">
                             <h5 class="card-title">{{ $animal->name }}</h5>
-                            <p class="card-text">{{ Str::limit($animal->veterinary_info, 100) }}</p>
-                            <p><strong>Raça:</strong> {{ $animal->breed }}</p>
+                            <p><strong>Sexo:</strong> {{ $animal->gender }}</p>
                             <p><strong>Idade:</strong> {{ $animal->age }} anos</p>
-                            <a href="{{ route('animals.show', $animal->id) }}" class="btn btn-primary btn-sm">Saiba Mais</a>
+                            <p><strong>Abrigo:</strong> {{ $animal->shelter->name ?? 'Não informado' }}</p>
+                            <button type="button" class="btn btn-primary btn-sm" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#animalModal"
+                                data-name="{{ $animal->name }}"
+                                data-gender="{{ $animal->gender }}"
+                                data-age="{{ $animal->age }}"
+                                data-shelter="{{ $animal->shelter->name ?? 'Não informado' }}"
+                                data-contact="{{ $animal->shelter->contact ?? 'Não disponível' }}"
+                                data-veterinary="{{ $animal->veterinaryInfo ? json_encode($animal->veterinaryInfo->only(['rabies_vaccine', 'polyvalent_vaccine', 'giardia_vaccine', 'flu_vaccine', 'antiparasitic', 'neutered'])) : '{}' }}"
+                                data-temperament="{{ $animal->temperament ? json_encode($animal->temperament->only(['calm', 'playful', 'protective', 'agressive'])) : '{}' }}"
+                                data-energy="{{ $animal->energyLevel ? json_encode($animal->energyLevel->only(['high_energy', 'moderate_energy', 'low_energy'])) : '{}' }}"
+                                data-relationship="{{ $animal->animalRelationship ? json_encode($animal->animalRelationship->only(['good_with_others', 'dominant_with_others', 'better_alone'])) : '{}' }}">
+                                Saiba Mais
+                        </button>
+                        
+
                         </div>
                     </div>
                 </div>
@@ -160,68 +168,182 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="animalModal" tabindex="-1" aria-labelledby="animalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="animalModalLabel">Detalhes do Animal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nome:</strong> <span id="animalName"></span></p>
+                    <p><strong>Sexo:</strong> <span id="animalGender"></span></p>
+                    <p><strong>Idade:</strong> <span id="animalAge"></span> anos</p>
+                    <p><strong>Abrigo:</strong> <span id="animalShelter"></span></p>
+                    <p><strong>Contato do Abrigo:</strong> <span id="shelterContact"></span></p>
+                    <p id="animalDescription"></p>
+    
+                    <div id="veterinaryInfoContainer" class="mb-3" style="display:none;">
+                        <strong>Informações Veterinárias:</strong><br>
+                        <span id="veterinaryInfoBadges"></span>
+                    </div>
+    
+                    <div id="temperamentContainer" class="mb-3" style="display:none;">
+                        <strong>Temperamento:</strong><br>
+                        <span id="temperamentBadges"></span>
+                    </div>
+    
+                    <div id="energyLevelContainer" class="mb-3" style="display:none;">
+                        <strong>Nível de Energia:</strong><br>
+                        <span id="energyLevelBadges"></span>
+                    </div>
+    
+                    <div id="relationshipContainer" class="mb-3" style="display:none;">
+                        <strong>Relacionamento:</strong><br>
+                        <span id="relationshipBadges"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2024 Adote um Amigo. Todos os direitos reservados.</p>
+            <p>&copy; 2025 Adote um Amigo. Todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('filterForm');
-        const resultsContainer = document.querySelector('.row'); 
-        const filterUrl = '/animais';
-    
-        form.addEventListener('submit', function (event) {
-            event.preventDefault(); 
-    
-           
-            const formData = new FormData(form);
-            const queryParams = new URLSearchParams(formData).toString(); 
-    
-            console.log(`URL enviada: ${filterUrl}?${queryParams}`);
-    
-            fetch(`${filterUrl}?${queryParams}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-                .then(response => response.json())
-                .then(data => {
-                    resultsContainer.innerHTML = '';
-    
-                    if (data.animals.length > 0) {
-                        data.animals.forEach(animal => {
-                            const card = `
-                                <div class="col-md-3 mb-3">
-                                    <div class="card">
-                                        ${animal.photos.length > 0 ? `
-                                            <img src="/storage/${animal.photos[0].photo_path}" class="card-img-top" alt="${animal.name}">
-                                        ` : `
-                                            <img src="/images/default_animal.jpg" class="card-img-top" alt="Animal sem foto">
-                                        `}
-                                        <div class="card-body">
-                                            <h5 class="card-title">${animal.name}</h5>
-                                            <p><strong>Raça:</strong> ${animal.breed}</p>
-                                            <p><strong>Idade:</strong> ${animal.age} anos</p>
-                                            <a href="/animals/${animal.id}" class="btn btn-primary btn-sm">Saiba Mais</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            resultsContainer.insertAdjacentHTML('beforeend', card);
-                        });
-                    } else {
-                        resultsContainer.innerHTML = '<p class="text-center">Nenhum animal encontrado.</p>';
-                    }
-                })
-                .catch(error => console.error('Erro:', error));
-        });
+      document.addEventListener('DOMContentLoaded', function () {
+    const veterinaryInfoLabels = {
+        rabies_vaccine: "Vacina Antirrábica",
+        polyvalent_vaccine: "Vacina Polivalente",
+        giardia_vaccine: "Vacina Giárdia",
+        flu_vaccine: "Vacina Gripe",
+        antiparasitic: "Antiparasitário",
+        neutered: "Castrado"
+    };
+
+    const temperamentLabels = {
+        calm: "Calmo",
+        playful: "Brincalhão",
+        protective: "Protetor",
+        agressive: "Agressivo"
+    };
+
+    const energyLevelLabels = {
+        high_energy: "Alta Energia",
+        moderate_energy: "Moderada Energia",
+        low_energy: "Baixa Energia"
+    };
+
+    const relationshipLabels = {
+        good_with_others: "Bom com Outros Animais",
+        dominant_with_others: "Dominante",
+        better_alone: "Melhor Sozinho"
+    };
+
+    const animalModal = document.getElementById('animalModal');
+    animalModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+
+        // Exemplo de preenchimento básico
+        document.getElementById('animalName').textContent = button.getAttribute('data-name');
+        document.getElementById('animalGender').textContent = button.getAttribute('data-gender');
+        document.getElementById('animalAge').textContent = button.getAttribute('data-age');
+        document.getElementById('animalShelter').textContent = button.getAttribute('data-shelter');
+        document.getElementById('shelterContact').textContent = button.getAttribute('data-contact');
+        document.getElementById('animalDescription').textContent = button.getAttribute('data-description');
+
+        // Informações Veterinárias
+        const veterinaryInfo = JSON.parse(button.getAttribute('data-veterinary') || '{}');
+        const veterinaryInfoContainer = document.getElementById('veterinaryInfoContainer');
+        const veterinaryInfoBadges = document.getElementById('veterinaryInfoBadges');
+        veterinaryInfoBadges.innerHTML = '';
+        if (Object.values(veterinaryInfo).some(value => value)) {
+            veterinaryInfoContainer.style.display = 'block';
+            Object.entries(veterinaryInfo).forEach(([key, value]) => {
+                if (value && veterinaryInfoLabels[key]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-success me-1';
+                    badge.textContent = veterinaryInfoLabels[key];
+                    veterinaryInfoBadges.appendChild(badge);
+                }
+            });
+        } else {
+            veterinaryInfoContainer.style.display = 'none';
+        }
+
+        // Temperamento
+        const temperament = JSON.parse(button.getAttribute('data-temperament') || '{}');
+        const temperamentContainer = document.getElementById('temperamentContainer');
+        const temperamentBadges = document.getElementById('temperamentBadges');
+        temperamentBadges.innerHTML = '';
+        if (Object.values(temperament).some(value => value)) {
+            temperamentContainer.style.display = 'block';
+            Object.entries(temperament).forEach(([key, value]) => {
+                if (value && temperamentLabels[key]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-info me-1';
+                    badge.textContent = temperamentLabels[key];
+                    temperamentBadges.appendChild(badge);
+                }
+            });
+        } else {
+            temperamentContainer.style.display = 'none';
+        }
+
+        // Nível de Energia
+        const energyLevel = JSON.parse(button.getAttribute('data-energy') || '{}');
+        const energyLevelContainer = document.getElementById('energyLevelContainer');
+        const energyLevelBadges = document.getElementById('energyLevelBadges');
+        energyLevelBadges.innerHTML = '';
+        if (Object.values(energyLevel).some(value => value)) {
+            energyLevelContainer.style.display = 'block';
+            Object.entries(energyLevel).forEach(([key, value]) => {
+                if (value && energyLevelLabels[key]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-warning me-1';
+                    badge.textContent = energyLevelLabels[key];
+                    energyLevelBadges.appendChild(badge);
+                }
+            });
+        } else {
+            energyLevelContainer.style.display = 'none';
+        }
+
+        // Relacionamento
+        const relationship = JSON.parse(button.getAttribute('data-relationship') || '{}');
+        const relationshipContainer = document.getElementById('relationshipContainer');
+        const relationshipBadges = document.getElementById('relationshipBadges');
+        relationshipBadges.innerHTML = '';
+        if (Object.values(relationship).some(value => value)) {
+            relationshipContainer.style.display = 'block';
+            Object.entries(relationship).forEach(([key, value]) => {
+                if (value && relationshipLabels[key]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge bg-primary me-1';
+                    badge.textContent = relationshipLabels[key];
+                    relationshipBadges.appendChild(badge);
+                }
+            });
+        } else {
+            relationshipContainer.style.display = 'none';
+        }
     });
-    
+});
+
+
+
+    </script>
 </body>
+
 </html>

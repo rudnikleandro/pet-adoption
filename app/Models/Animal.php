@@ -15,13 +15,33 @@ class Animal extends Model
         'gender',
         'breed',
         'size',
-        'veterinary_info',
+        'weight',
         'shelter_id',
     ];
 
     public function photos()
     {
         return $this->hasMany(AnimalPhoto::class);
+    }
+
+    public function veterinaryInfo()
+    {
+        return $this->hasOne(VeterinaryInfo::class);
+    }
+
+    public function temperament()
+    {
+        return $this->hasOne(Temperament::class);
+    }
+
+    public function energyLevel()
+    {
+        return $this->hasOne(EnergyLevel::class);
+    }
+
+    public function animalRelationship()
+    {
+        return $this->hasOne(AnimalRelationship::class);
     }
 
     public function shelter()

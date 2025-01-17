@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <h1>Cadastrar Animal - teste jenkins</h1>
+    <h1>Cadastrar Animal</h1>
     <form action="{{ route('animals.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -35,9 +35,56 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="veterinary_info">Informações Veterinárias:</label>
-            <textarea class="form-control" id="veterinary_info" name="veterinary_info"></textarea>
+            <label for="weight">Peso (kg):</label>
+            <input type="number" step="0.1" class="form-control" id="weight" name="weight">
         </div>
+
+        <!-- Informações Veterinárias -->
+        <fieldset>
+            <legend>Informações Veterinárias</legend>
+            @foreach(['rabies_vaccine' => 'Vacina Antirrábica', 'polyvalent_vaccine' => 'Vacina Polivalente', 
+                      'giardia_vaccine' => 'Vacina Giárdia', 'flu_vaccine' => 'Vacina Gripe',
+                      'antiparasitic' => 'Antiparasitário', 'neutered' => 'Castrado'] as $field => $label)
+                <div class="form-check">
+                    <input type="checkbox" name="veterinary_info[{{ $field }}]" class="form-check-input" id="{{ $field }}">
+                    <label class="form-check-label" for="{{ $field }}">{{ $label }}</label>
+                </div>
+            @endforeach
+        </fieldset>
+
+        <!-- Temperamento -->
+        <fieldset>
+            <legend>Temperamento</legend>
+            @foreach(['calm' => 'Calmo', 'playful' => 'Brincalhão', 'protective' => 'Protetor', 'agressive' => 'Agressivo'] as $field => $label)
+                <div class="form-check">
+                    <input type="checkbox" name="temperament[{{ $field }}]" class="form-check-input" id="{{ $field }}">
+                    <label class="form-check-label" for="{{ $field }}">{{ $label }}</label>
+                </div>
+            @endforeach
+        </fieldset>
+
+        <!-- Nível de Energia -->
+        <fieldset>
+            <legend>Nível de Energia</legend>
+            @foreach(['high_energy' => 'Alta Energia', 'moderate_energy' => 'Moderada Energia', 'low_energy' => 'Baixa Energia'] as $field => $label)
+                <div class="form-check">
+                    <input type="checkbox" name="energy_level[{{ $field }}]" class="form-check-input" id="{{ $field }}">
+                    <label class="form-check-label" for="{{ $field }}">{{ $label }}</label>
+                </div>
+            @endforeach
+        </fieldset>
+
+        <!-- Relacionamento com Outros Animais -->
+        <fieldset>
+            <legend>Relacionamento com Outros Animais</legend>
+            @foreach(['good_with_others' => 'Bom com Outros Animais', 'dominant_with_others' => 'Dominante com Outros Animais', 'better_alone' => 'Melhor Sozinho'] as $field => $label)
+                <div class="form-check">
+                    <input type="checkbox" name="animal_relationship[{{ $field }}]" class="form-check-input" id="{{ $field }}">
+                    <label class="form-check-label" for="{{ $field }}">{{ $label }}</label>
+                </div>
+            @endforeach
+        </fieldset>
+
         <div class="form-group">
             <label for="shelter_id">Abrigo:</label>
             <select class="form-control" id="shelter_id" name="shelter_id" required>

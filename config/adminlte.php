@@ -301,9 +301,14 @@ return [
     'menu' => [
         ['header' => 'GERENCIAR DADOS'],
         [
-            'text' => 'Animais',
+            'text' => 'Animais Disponíveis',
             'url'  => 'admin/animals',
             'icon' => 'fas fa-paw',
+        ],
+        [
+            'text' => 'Animais Adotados',
+            'url'  => 'admin/animals/adopted',
+            'icon' => 'fas fa-heart',
         ],
         [
             'text' => 'Adotantes',

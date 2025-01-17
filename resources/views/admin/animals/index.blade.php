@@ -25,7 +25,7 @@
                 <th>Raça</th>
                 <th>Tamanho</th>
                 <th>Abrigo</th>
-                <th>Informações Veterinárias</th>
+                <th>Informações</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -40,14 +40,33 @@
                     <td>{{ $animal->size }}</td>
                     <td>{{ $animal->shelter->name ?? 'N/A' }}</td>
                     <td>
-                        <span 
-                            class="text-truncate d-inline-block" 
-                            style="max-width: 200px;" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="top" 
-                            title="{{ $animal->veterinary_info }}">
-                            {{ \Illuminate\Support\Str::limit($animal->veterinary_info, 30, '...') }}
-                        </span>
+                        <strong>Veterinárias:</strong><br>
+                        @foreach(['Vacina Antirrábica' => 'rabies_vaccine', 'Vacina Polivalente' => 'polyvalent_vaccine', 'Vacina Giárdia' => 'giardia_vaccine', 'Vacina Gripe' => 'flu_vaccine', 'Antiparasitário' => 'antiparasitic', 'Castrado' => 'neutered'] as $label => $field)
+                            @if(optional($animal->veterinaryInfo)->$field)
+                                <span class="badge bg-success">{{ $label }}</span>
+                            @endif
+                        @endforeach
+                        <br>
+                        <strong>Temperamento:</strong><br>
+                        @foreach(['Calmo' => 'calm', 'Brincalhão' => 'playful', 'Protetor' => 'protective', 'Agressivo' => 'agressive'] as $label => $field)
+                            @if(optional($animal->temperament)->$field)
+                                <span class="badge bg-info">{{ $label }}</span>
+                            @endif
+                        @endforeach
+                        <br>
+                        <strong>Nível de Energia:</strong><br>
+                        @foreach(['Alta Energia' => 'high_energy', 'Moderada Energia' => 'moderate_energy', 'Baixa Energia' => 'low_energy'] as $label => $field)
+                            @if(optional($animal->energyLevel)->$field)
+                                <span class="badge bg-warning">{{ $label }}</span>
+                            @endif
+                        @endforeach
+                        <br>
+                        <strong>Relacionamento:</strong><br>
+                        @foreach(['Bom com Outros Animais' => 'good_with_others', 'Dominante' => 'dominant_with_others', 'Melhor Sozinho' => 'better_alone'] as $label => $field)
+                            @if(optional($animal->animalRelationship)->$field)
+                                <span class="badge bg-primary">{{ $label }}</span>
+                            @endif
+                        @endforeach
                     </td>
                     <td>
                         <a href="{{ route('animals.edit', $animal->id) }}" class="btn btn-warning btn-sm">Editar</a>

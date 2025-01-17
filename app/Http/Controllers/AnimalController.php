@@ -18,8 +18,20 @@ class AnimalController extends Controller
      */
     public function index()
     {
-        $animals = Animal::with('shelter', 'photos', 'veterinaryInfo', 'temperament', 'energyLevel', 'animalRelationship')->get();
+        $animals = Animal::with('shelter', 'photos', 'veterinaryInfo', 'temperament', 'energyLevel', 'animalRelationship')
+            ->doesntHave('adopter')
+            ->get();
+
         return view('admin.animals.index', compact('animals'));
+    }
+
+    public function adopted()
+    {
+        $adoptedAnimals = Animal::with('shelter', 'photos', 'adopter')
+            ->has('adopter')
+            ->get();
+
+        return view('admin.animals.adopted', compact('adoptedAnimals'));
     }
 
     /**

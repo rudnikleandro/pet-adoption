@@ -19,7 +19,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    Route::resource('animals', AnimalController::class);
+    Route::resource('animals', AnimalController::class)->except(['show']);
     Route::resource('adopters', AdopterController::class);
     Route::resource('shelters', ShelterController::class);
 
@@ -33,4 +33,4 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
 Route::get('/animals/{id}', [PublicController::class, 'show'])->name('animals.show');
-
+Route::get('/admin/animals/adopted', [AnimalController::class, 'adopted'])->name('animals.adopted');

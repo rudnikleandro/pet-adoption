@@ -13,7 +13,9 @@ class PublicController extends Controller
 {
     $filters = $request->only(['size', 'age', 'sex', 'shelter']);
 
-    $query = Animal::query()->with('photos');
+    $query = Animal::query()
+        ->with('photos')
+        ->doesntHave('adopter');
 
     if (!empty($filters['size'])) {
         $query->where('size', $filters['size']);

@@ -74,6 +74,8 @@ Ensure you have the following installed:
 6. **Start the development server:**:
    ```bash
     php artisan serve
+   
+---
 
 ## 🤝 Contributing
 
@@ -90,6 +92,8 @@ Contributions are welcome! Here's how you can contribute:
    ```bash
     git push origin feature/your-feature
 5. **Open a pull request on GitHub**.
+
+---
 
 ## 📜 License
 This project is licensed under the [MIT License](https://github.com/rudnikleandro/pet-adoption/blob/main/LICENSE).

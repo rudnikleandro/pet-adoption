@@ -7,14 +7,16 @@
 @endsection
 
 @section('content')
-    @if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
+    <!-- Button to navigate to the "Create New Animal" page -->
     <a href="{{ route('animals.create') }}" class="btn btn-primary mb-3">Cadastrar Novo Animal</a>
 
+    <!-- Table to display the list of animals -->
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -30,6 +32,7 @@
             </tr>
         </thead>
         <tbody>
+            <!-- Iterate through the list of animals -->
             @forelse($animals as $animal)
                 <tr>
                     <td>{{ $animal->id }}</td>
@@ -41,29 +44,29 @@
                     <td>{{ $animal->shelter->name ?? 'N/A' }}</td>
                     <td>
                         <strong>Veterinárias:</strong><br>
-                        @foreach(['Vacina Antirrábica' => 'rabies_vaccine', 'Vacina Polivalente' => 'polyvalent_vaccine', 'Vacina Giárdia' => 'giardia_vaccine', 'Vacina Gripe' => 'flu_vaccine', 'Antiparasitário' => 'antiparasitic', 'Castrado' => 'neutered'] as $label => $field)
-                            @if(optional($animal->veterinaryInfo)->$field)
+                        @foreach (['Vacina Antirrábica' => 'rabies_vaccine', 'Vacina Polivalente' => 'polyvalent_vaccine', 'Vacina Giárdia' => 'giardia_vaccine', 'Vacina Gripe' => 'flu_vaccine', 'Antiparasitário' => 'antiparasitic', 'Castrado' => 'neutered'] as $label => $field)
+                            @if (optional($animal->veterinaryInfo)->$field)
                                 <span class="badge bg-success">{{ $label }}</span>
                             @endif
                         @endforeach
                         <br>
                         <strong>Temperamento:</strong><br>
-                        @foreach(['Calmo' => 'calm', 'Brincalhão' => 'playful', 'Protetor' => 'protective', 'Agressivo' => 'agressive'] as $label => $field)
-                            @if(optional($animal->temperament)->$field)
+                        @foreach (['Calmo' => 'calm', 'Brincalhão' => 'playful', 'Protetor' => 'protective', 'Agressivo' => 'agressive'] as $label => $field)
+                            @if (optional($animal->temperament)->$field)
                                 <span class="badge bg-info">{{ $label }}</span>
                             @endif
                         @endforeach
                         <br>
                         <strong>Nível de Energia:</strong><br>
-                        @foreach(['Alta Energia' => 'high_energy', 'Moderada Energia' => 'moderate_energy', 'Baixa Energia' => 'low_energy'] as $label => $field)
-                            @if(optional($animal->energyLevel)->$field)
+                        @foreach (['Alta Energia' => 'high_energy', 'Moderada Energia' => 'moderate_energy', 'Baixa Energia' => 'low_energy'] as $label => $field)
+                            @if (optional($animal->energyLevel)->$field)
                                 <span class="badge bg-warning">{{ $label }}</span>
                             @endif
                         @endforeach
                         <br>
                         <strong>Relacionamento:</strong><br>
-                        @foreach(['Bom com Outros Animais' => 'good_with_others', 'Dominante' => 'dominant_with_others', 'Melhor Sozinho' => 'better_alone'] as $label => $field)
-                            @if(optional($animal->animalRelationship)->$field)
+                        @foreach (['Bom com Outros Animais' => 'good_with_others', 'Dominante' => 'dominant_with_others', 'Melhor Sozinho' => 'better_alone'] as $label => $field)
+                            @if (optional($animal->animalRelationship)->$field)
                                 <span class="badge bg-primary">{{ $label }}</span>
                             @endif
                         @endforeach
@@ -88,10 +91,9 @@
 
 @section('js')
     <script>
-        // Ativa o tooltip do Bootstrap
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         });

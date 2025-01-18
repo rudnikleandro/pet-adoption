@@ -7,9 +7,10 @@
 @endsection
 
 @section('content')
+    <!-- Button to navigate to the shelter registration page -->
     <a href="{{ route('shelters.create') }}" class="btn btn-primary mb-3">Cadastrar Novo Abrigo</a>
 
-    @if(session('success'))
+    @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
@@ -24,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($shelters as $shelter)
+            @foreach ($shelters as $shelter)
                 <tr>
                     <td>{{ $shelter->name }}</td>
                     <td>{{ $shelter->city }}</td>

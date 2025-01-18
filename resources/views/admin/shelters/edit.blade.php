@@ -7,6 +7,7 @@
 @endsection
 
 @section('content')
+    <!-- Form to edit an existing shelter -->
     <form action="{{ route('shelters.update', $shelter->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -16,7 +17,8 @@
         </div>
         <div class="mb-3">
             <label for="street" class="form-label">Rua</label>
-            <input type="text" name="street" id="street" value="{{ $shelter->street }}" class="form-control" required>
+            <input type="text" name="street" id="street" value="{{ $shelter->street }}" class="form-control"
+                required>
         </div>
         <div class="mb-3">
             <label for="city" class="form-label">Cidade</label>
@@ -28,7 +30,8 @@
         </div>
         <div class="mb-3">
             <label for="responsible_name" class="form-label">Nome do Responsável</label>
-            <input type="text" name="responsible_name" id="responsible_name" value="{{ $shelter->responsible_name }}" class="form-control" required>
+            <input type="text" name="responsible_name" id="responsible_name" value="{{ $shelter->responsible_name }}"
+                class="form-control" required>
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Telefone</label>

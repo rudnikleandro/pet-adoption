@@ -7,14 +7,16 @@
 @endsection
 
 @section('content')
+    <!-- Form to register a new adopter -->
     <form action="{{ route('adopters.store') }}" method="POST">
         @csrf
 
+        <!-- Dropdown to select an animal -->
         <div class="mb-3">
             <label for="animal_id" class="form-label">Animal</label>
             <select class="form-select" id="animal_id" name="animal_id" required>
                 <option value="">Selecione um animal</option>
-                @foreach($animals as $animal)
+                @foreach ($animals as $animal)
                     <option value="{{ $animal->id }}">
                         {{ $animal->name }} (Abrigo: {{ $animal->shelter->name ?? 'N/A' }})
                     </option>

@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Adopter;
 use App\Models\Animal;
 
+/**
+ * Class AdopterController
+ *
+ * Handles CRUD operations for adopters, including creating, reading, updating,
+ * and deleting adopter records. It also manages relationships with animals.
+ */
 class AdopterController extends Controller
 {
     /**
@@ -48,14 +54,6 @@ class AdopterController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
@@ -78,7 +76,7 @@ class AdopterController extends Controller
             'street' => 'required',
             'city' => 'required',
             'state' => 'required',
-            'adoption_date' =>'required|date',
+            'adoption_date' => 'required|date',
         ]);
 
         $adopter = Adopter::findOrFail($id);

@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Animal;
 
+/**
+ * Class HomeController
+ *
+ * Handles the homepage of the application, displaying animals available for adoption.
+ * This controller requires the user to be authenticated.
+ */
 class HomeController extends Controller
 {
     /**
@@ -24,9 +29,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $animals = Animal::with('shelter', 'photos', 'veterinaryInfo', 'temperament', 'energyLevel', 'animalRelationship')
+        $animals = Animal::with(
+            'shelter',
+            'photos',
+            'veterinaryInfo',
+            'temperament',
+            'energyLevel',
+            'animalRelationship'
+        )
             ->whereDoesntHave('adopter')
             ->get();
 
-        return view('home', compact('animals'));    }
+        return view('home', compact('animals'));
+    }
 }

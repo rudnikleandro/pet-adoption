@@ -7,6 +7,7 @@
     <title>Animais para Adoção</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        
         .carousel img {
             height: 200px;
             object-fit: cover;
@@ -35,14 +36,27 @@
             object-fit: cover;
             height: 200px;
         }
+
+        .card {
+            background-color: white;
+            border: none;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
     </style>
 </head>
 
 <body>
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">Adoção Pet</a>
+            <a class="navbar-brand" href="#">Adote um Pet   </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -52,23 +66,22 @@
                         <a class="nav-link" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#contact">Fale Conosco</a>
+                        <a class="nav-link" href="#contact">Abrigos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">Quem Somos</a>
+                        <a class="nav-link" href="#about">Sobre</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
+    <div style="padding-top: 56px;"></div> 
+    
     <!-- Hero Section -->
     <div class="px-4 py-5 my-5 text-center">
-        <h1 class="display-5 fw-bold text-body-emphasis">Adote um Pet</h1>
+        <h1 class="display-5 fw-bold text-body-emphasis">Adoção de Animais</h1>
         <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Adotar um pet é um ato de amor que transforma vidas. Além de oferecer um lar para
-                animais que muitas vezes foram abandonados ou maltratados, você ganha um companheiro fiel e cheio de
-                carinho.</p>
+            <p class="lead mb-4">Reunindo animais de abrigos em RioMafra para facilitar sua adoção. Encontre um novo amigo e transforme vidas!</p>
         </div>
     </div>
 

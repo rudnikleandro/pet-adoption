@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Shelter;
 
+/**
+ * Class ShelterController
+ *
+ * Handles CRUD operations for shelters, allowing the management
+ * of shelter records in the admin panel.
+ */
 class ShelterController extends Controller
 {
     /**
@@ -40,14 +46,6 @@ class ShelterController extends Controller
 
         Shelter::create($request->all());
         return redirect()->route('shelters.index')->with('success', 'Abrigo criado com sucesso!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

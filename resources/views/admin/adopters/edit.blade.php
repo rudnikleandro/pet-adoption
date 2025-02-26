@@ -7,15 +7,17 @@
 @endsection
 
 @section('content')
+    <!-- Form to update adopter details -->
     <form action="{{ route('adopters.update', $adopter->id) }}" method="POST">
         @csrf
         @method('PUT')
 
+        <!-- Dropdown to select an animal -->
         <div class="mb-3">
             <label for="animal_id" class="form-label">Animal</label>
             <select class="form-select" id="animal_id" name="animal_id" required>
                 <option value="">Selecione um animal</option>
-                @foreach($animals as $animal)
+                @foreach ($animals as $animal)
                     <option value="{{ $animal->id }}" {{ $adopter->animal_id == $animal->id ? 'selected' : '' }}>
                         {{ $animal->name }} (Abrigo: {{ $animal->shelter->name ?? 'N/A' }})
                     </option>
@@ -40,7 +42,8 @@
 
         <div class="mb-3">
             <label for="street" class="form-label">Rua</label>
-            <input type="text" class="form-control" id="street" name="street" value="{{ $adopter->street }}" required>
+            <input type="text" class="form-control" id="street" name="street" value="{{ $adopter->street }}"
+                required>
         </div>
 
         <div class="mb-3">
@@ -50,12 +53,14 @@
 
         <div class="mb-3">
             <label for="state" class="form-label">Estado</label>
-            <input type="text" class="form-control" id="state" name="state" value="{{ $adopter->state }}" required>
+            <input type="text" class="form-control" id="state" name="state" value="{{ $adopter->state }}"
+                required>
         </div>
 
         <div class="mb-3">
             <label for="adoption_date" class="form-label">Data de Adoção</label>
-            <input type="date" class="form-control" id="adoption_date" name="adoption_date" value="{{ $adopter->adoption_date }}" required>
+            <input type="date" class="form-control" id="adoption_date" name="adoption_date"
+                value="{{ $adopter->adoption_date }}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Salvar Alterações</button>

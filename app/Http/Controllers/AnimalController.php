@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Animal;
-use App\Models\VeterinaryInfo;
-use App\Models\Temperament;
-use App\Models\EnergyLevel;
-use App\Models\AnimalRelationship;
 use App\Models\AnimalPhoto;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class AnimalController
+ *
+ * Manages CRUD operations for animals, including their photos, veterinary information,
+ * temperament, energy levels, and relationships with shelters and adopters.
+ */
 class AnimalController extends Controller
 {
     /**
@@ -47,66 +49,60 @@ class AnimalController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required',
-        'age' => 'required|integer',
-        'gender' => 'required',
-        'breed' => 'required',
-        'size' => 'required',
-        'weight' => 'nullable|numeric',
-        'shelter_id' => 'required|exists:shelters,id',
-        'photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'veterinary_info' => 'nullable|array',
-        'temperament' => 'nullable|array',
-        'energy_level' => 'nullable|array',
-        'animal_relationship' => 'nullable|array',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'age' => 'required|integer',
+            'gender' => 'required',
+            'breed' => 'required',
+            'size' => 'required',
+            'weight' => 'nullable|numeric',
+            'shelter_id' => 'required|exists:shelters,id',
+            'photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'veterinary_info' => 'nullable|array',
+            'temperament' => 'nullable|array',
+            'energy_level' => 'nullable|array',
+            'animal_relationship' => 'nullable|array',
+        ]);
 
-    $animal = Animal::create($validated);
+        $animal = Animal::create($validated);
 
-    if ($request->hasFile('photos')) {
-        foreach ($request->file('photos') as $photo) {
-            $path = $photo->store('animal_photos', 'public');
-            AnimalPhoto::create([
-                'animal_id' => $animal->id,
-                'photo_path' => $path,
-            ]);
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $path = $photo->store('animal_photos', 'public');
+                AnimalPhoto::create([
+                    'animal_id' => $animal->id,
+                    'photo_path' => $path,
+                ]);
+            }
         }
+
+        $veterinaryInfo = [];
+        foreach (['rabies_vaccine', 'polyvalent_vaccine', 'giardia_vaccine', 'flu_vaccine', 'antiparasitic', 'neutered'] as $field) {
+            $veterinaryInfo[$field] = $request->input("veterinary_info.$field") === 'on' ? 1 : 0;
+        }
+        $animal->veterinaryInfo()->create($veterinaryInfo);
+
+        $temperament = [];
+        foreach (['calm', 'playful', 'protective', 'agressive'] as $field) {
+            $temperament[$field] = $request->input("temperament.$field") === 'on' ? 1 : 0;
+        }
+        $animal->temperament()->create($temperament);
+
+        $energyLevel = [];
+        foreach (['high_energy', 'moderate_energy', 'low_energy'] as $field) {
+            $energyLevel[$field] = $request->input("energy_level.$field") === 'on' ? 1 : 0;
+        }
+        $animal->energyLevel()->create($energyLevel);
+
+        $animalRelationship = [];
+        foreach (['good_with_others', 'dominant_with_others', 'better_alone'] as $field) {
+            $animalRelationship[$field] = $request->input("animal_relationship.$field") === 'on' ? 1 : 0;
+        }
+        $animal->animalRelationship()->create($animalRelationship);
+
+        return redirect()->route('animals.index')->with('success', 'Animal cadastrado com sucesso!');
     }
-
-    // Processa Veterinary Info
-    $veterinaryInfo = [];
-    foreach (['rabies_vaccine', 'polyvalent_vaccine', 'giardia_vaccine', 'flu_vaccine', 'antiparasitic', 'neutered'] as $field) {
-        $veterinaryInfo[$field] = $request->input("veterinary_info.$field") === 'on' ? 1 : 0;
-    }
-    $animal->veterinaryInfo()->create($veterinaryInfo);
-
-    // Processa Temperaments
-    $temperament = [];
-    foreach (['calm', 'playful', 'protective', 'agressive'] as $field) {
-        $temperament[$field] = $request->input("temperament.$field") === 'on' ? 1 : 0;
-    }
-    $animal->temperament()->create($temperament);
-
-    // Processa Energy Levels
-    $energyLevel = [];
-    foreach (['high_energy', 'moderate_energy', 'low_energy'] as $field) {
-        $energyLevel[$field] = $request->input("energy_level.$field") === 'on' ? 1 : 0;
-    }
-    $animal->energyLevel()->create($energyLevel);
-
-    // Processa Animal Relationships
-    $animalRelationship = [];
-    foreach (['good_with_others', 'dominant_with_others', 'better_alone'] as $field) {
-        $animalRelationship[$field] = $request->input("animal_relationship.$field") === 'on' ? 1 : 0;
-    }
-    $animal->animalRelationship()->create($animalRelationship);
-
-    return redirect()->route('animals.index')->with('success', 'Animal cadastrado com sucesso!');
-}
-
-
 
     /**
      * Show the form for editing the specified resource.
@@ -117,81 +113,74 @@ class AnimalController extends Controller
         $shelters = \App\Models\Shelter::all();
         return view('admin.animals.edit', compact('animal', 'shelters'));
     }
-    
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'name' => 'required',
-        'age' => 'required|integer',
-        'gender' => 'required',
-        'breed' => 'required',
-        'size' => 'required',
-        'weight' => 'nullable|numeric',
-        'shelter_id' => 'required|exists:shelters,id',
-        'photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'veterinary_info' => 'nullable|array',
-        'temperament' => 'nullable|array',
-        'energy_level' => 'nullable|array',
-        'animal_relationship' => 'nullable|array',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'age' => 'required|integer',
+            'gender' => 'required',
+            'breed' => 'required',
+            'size' => 'required',
+            'weight' => 'nullable|numeric',
+            'shelter_id' => 'required|exists:shelters,id',
+            'photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'veterinary_info' => 'nullable|array',
+            'temperament' => 'nullable|array',
+            'energy_level' => 'nullable|array',
+            'animal_relationship' => 'nullable|array',
+        ]);
 
-    $animal = Animal::findOrFail($id);
-    $animal->update($validated);
+        $animal = Animal::findOrFail($id);
+        $animal->update($validated);
 
-    if ($request->filled('delete_photos')) {
-        $photosToDelete = AnimalPhoto::whereIn('id', $request->delete_photos)->get();
-        foreach ($photosToDelete as $photo) {
-            Storage::disk('public')->delete($photo->photo_path);
-            $photo->delete();
+        if ($request->filled('delete_photos')) {
+            $photosToDelete = AnimalPhoto::whereIn('id', $request->delete_photos)->get();
+            foreach ($photosToDelete as $photo) {
+                Storage::disk('public')->delete($photo->photo_path);
+                $photo->delete();
+            }
         }
-    }
 
-    if ($request->hasFile('photos')) {
-        foreach ($request->file('photos') as $photo) {
-            $path = $photo->store('animal_photos', 'public');
-            AnimalPhoto::create([
-                'animal_id' => $animal->id,
-                'photo_path' => $path,
-            ]);
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $path = $photo->store('animal_photos', 'public');
+                AnimalPhoto::create([
+                    'animal_id' => $animal->id,
+                    'photo_path' => $path,
+                ]);
+            }
         }
+
+        $veterinaryInfo = [];
+        foreach (['rabies_vaccine', 'polyvalent_vaccine', 'giardia_vaccine', 'flu_vaccine', 'antiparasitic', 'neutered'] as $field) {
+            $veterinaryInfo[$field] = $request->input("veterinary_info.$field") === 'on' ? 1 : 0;
+        }
+        $animal->veterinaryInfo()->updateOrCreate([], $veterinaryInfo);
+
+        $temperament = [];
+        foreach (['calm', 'playful', 'protective', 'agressive'] as $field) {
+            $temperament[$field] = $request->input("temperament.$field") === 'on' ? 1 : 0;
+        }
+        $animal->temperament()->updateOrCreate([], $temperament);
+
+        $energyLevel = [];
+        foreach (['high_energy', 'moderate_energy', 'low_energy'] as $field) {
+            $energyLevel[$field] = $request->input("energy_level.$field") === 'on' ? 1 : 0;
+        }
+        $animal->energyLevel()->updateOrCreate([], $energyLevel);
+
+        $animalRelationship = [];
+        foreach (['good_with_others', 'dominant_with_others', 'better_alone'] as $field) {
+            $animalRelationship[$field] = $request->input("animal_relationship.$field") === 'on' ? 1 : 0;
+        }
+        $animal->animalRelationship()->updateOrCreate([], $animalRelationship);
+
+        return redirect()->route('animals.index')->with('success', 'Animal atualizado com sucesso!');
     }
-
-    // Atualiza Veterinary Info
-    $veterinaryInfo = [];
-    foreach (['rabies_vaccine', 'polyvalent_vaccine', 'giardia_vaccine', 'flu_vaccine', 'antiparasitic', 'neutered'] as $field) {
-        $veterinaryInfo[$field] = $request->input("veterinary_info.$field") === 'on' ? 1 : 0;
-    }
-    $animal->veterinaryInfo()->updateOrCreate([], $veterinaryInfo);
-
-    // Atualiza Temperaments
-    $temperament = [];
-    foreach (['calm', 'playful', 'protective', 'agressive'] as $field) {
-        $temperament[$field] = $request->input("temperament.$field") === 'on' ? 1 : 0;
-    }
-    $animal->temperament()->updateOrCreate([], $temperament);
-
-    // Atualiza Energy Levels
-    $energyLevel = [];
-    foreach (['high_energy', 'moderate_energy', 'low_energy'] as $field) {
-        $energyLevel[$field] = $request->input("energy_level.$field") === 'on' ? 1 : 0;
-    }
-    $animal->energyLevel()->updateOrCreate([], $energyLevel);
-
-    // Atualiza Animal Relationships
-    $animalRelationship = [];
-    foreach (['good_with_others', 'dominant_with_others', 'better_alone'] as $field) {
-        $animalRelationship[$field] = $request->input("animal_relationship.$field") === 'on' ? 1 : 0;
-    }
-    $animal->animalRelationship()->updateOrCreate([], $animalRelationship);
-
-    return redirect()->route('animals.index')->with('success', 'Animal atualizado com sucesso!');
-}
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -200,7 +189,6 @@ class AnimalController extends Controller
     {
         $animal = Animal::findOrFail($id);
 
-        // Apagar fotos associadas
         foreach ($animal->photos as $photo) {
             Storage::disk('public')->delete($photo->photo_path);
             $photo->delete();

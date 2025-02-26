@@ -7,6 +7,7 @@
 @endsection
 
 @section('content')
+    <!-- Form to register a new shelter -->
     <form action="{{ route('shelters.store') }}" method="POST">
         @csrf
         <div class="mb-3">

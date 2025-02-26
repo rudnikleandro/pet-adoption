@@ -8,6 +8,7 @@
 
 @section('content')
     <div class="container">
+        <!-- Display success message if available -->
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

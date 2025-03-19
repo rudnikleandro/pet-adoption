@@ -7,6 +7,38 @@
     <title>Animais para Adoção</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            backdrop-filter: blur(5px); 
+            z-index: 1000; 
+        }
+
+        .navbar .nav-link {
+            color: white;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            background: url('/images/hero-image.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 5%;
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+        
         .carousel img {
             height: 200px;
             object-fit: cover;
@@ -40,7 +72,7 @@
 
 <body>
     <!-- Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">Adoção Pet</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -63,15 +95,13 @@
     </nav>
 
     <!-- Hero Section -->
-    <div class="px-4 py-5 my-5 text-center">
-        <h1 class="display-5 fw-bold text-body-emphasis">Adote um Pet</h1>
-        <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Adotar um pet é um ato de amor que transforma vidas. Além de oferecer um lar para
-                animais que muitas vezes foram abandonados ou maltratados, você ganha um companheiro fiel e cheio de
-                carinho.</p>
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="display-5 fw-bold">Que tal adotar um pet?</h1>
+            <p class="lead">Tem um amigo esperando por você em um abrigo!</p>
         </div>
     </div>
-
+    
         <!-- Filter -->
     <!-- Filtro de Animais -->
     <section class="container mt-4">

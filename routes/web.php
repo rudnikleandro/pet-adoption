@@ -34,3 +34,5 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/', [PublicController::class, 'index'])->name('public.index');
 Route::get('/animals/{id}', [PublicController::class, 'show'])->name('animals.show');
 Route::get('/admin/animals/adopted', [AnimalController::class, 'adopted'])->name('animals.adopted');
+
+

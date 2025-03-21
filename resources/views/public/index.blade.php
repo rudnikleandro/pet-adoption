@@ -180,6 +180,7 @@
             border-radius: 8px;
             box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
+            text-align: left;
             transition: all 0.3s ease-in-out;
         }
 
@@ -295,10 +296,12 @@
 
 
    <!-- Animais Disponíveis + Filtros Integrados -->
-<div id="animals" class="animals">
-    <div class="container mt-4">
-        <h1 class="text-center mb-4">Animais Disponíveis para Adoção</h1>
-
+<div id="animals" class="animals full-height">
+    <div class="col-12 col-md-10 col-lg-8 text-center">
+        <h2 class="mb-4 fw-bold">Animais disponíveis para adoção</h2>
+        <p class="lead">
+            Encontre seu amigo. Se preferir utilize o filtro ao lado para refinar sua busca.
+        </p>
         <div class="row">
             <!-- Menu Lateral de Filtros -->
             <aside class="col-md-3">

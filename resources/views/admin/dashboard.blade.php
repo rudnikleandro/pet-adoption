@@ -7,5 +7,5 @@
 @endsection
 
 @section('content')
-    <p>Este é o painel administrativo!</p>
+    <p>Aqui você vai poder cadastrar animais, abrigos e adotantes</p>
 @endsection
